@@ -1,0 +1,34 @@
+name: Temperatures
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+
+  workflow_dispatch:
+
+jobs:
+  executar:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clonar repositori
+      uses: actions/checkout@v4
+
+    - name: Instal·lar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Instal·lar dependències
+      run: pip install -r requirements.txt
+
+    - name: Executar programa
+      run: python temperatures.py
+
+    - name: Fer commit del JSON
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        git add *.json
+        git commit -m "Afegit JSON"
+        git push
